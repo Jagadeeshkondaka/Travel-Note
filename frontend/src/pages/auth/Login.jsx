@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import loginimg from '../../assets/Login2.png'
+import loginimg from '../../assets/login2.png'
 import { validateEmail } from '../../utils/helper';
 import axiosInstance from '../../utils/axiosinstancs';
 
