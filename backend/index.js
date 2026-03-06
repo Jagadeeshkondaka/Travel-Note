@@ -72,6 +72,11 @@ app.post('/post-image', upload.single('image'), async(req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 });
+const uploadPath = path.join(__dirname, "uploads");
+
+if (!fs.existsSync(uploadPath)) {
+  fs.mkdirSync(uploadPath);
+}
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 app.delete('/delettoriese-image', async (req, res) => {
