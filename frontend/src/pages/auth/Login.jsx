@@ -22,13 +22,13 @@ const Login = () => {
     setError('');
     try {
       const response = await axiosInstance.post('/login', { email:email,password:password });
-      // backend returns an "accessToken" field, not "token"
+  
       const accessToken = response.data?.accessToken;
       if (accessToken) {
         localStorage.setItem('token', accessToken);
         navigate('/dashboard');
       } else {
-        // guard: if login succeeded but payload changed
+      
         setError('Login failed: Invalid response from server.');
       }
     } catch (err) {
