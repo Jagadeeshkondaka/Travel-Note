@@ -36,23 +36,66 @@ const Login = () => {
     }
   };
   return (
-    <div className='h-screen bg-cyan-50 overflow-hidden  relative'>
-      <div className='container h-screen flex items-center justify-center px-20 mx-auto'>
-        <div className= 'w-2/4 h-[90vh] flex items-end bg-cover bg-center rounded-lg p-10 z-50' style={{ backgroundImage: `url(${loginimg})` }}>
+    <div className="min-h-screen bg-cyan-50 relative">
+      <div className="container mx-auto flex flex-col md:flex-row items-center justify-center px-4 md:px-10 lg:px-20 py-10">
+
+   
+        <div className="w-full md:w-1/2 flex items-center justify-center mb-6 md:mb-0">
+          <img
+            src={loginimg}
+            alt="login"
+            className="w-full h-auto max-h-[80vh] object-contain rounded-lg md:rounded-l-lg md:rounded-r-none"
+          />
         </div>
-        <div className='w-2/4 h-[70vh] bg-white rounded-r-lg relative p-16 shadow-lg shadow-cyan-200/20'>
-          <form onSubmit={handlelogin}>
-            <h4 className='text-2xl font-semibold mb-7'>Login</h4>
-            <input className="w-full px-5 py-3 text-sm  bg-cyan-600/5 mb-4 outline-none" type="text" placeholder='Email' value={email} onChange={(e)=>setEmail(e.target.value)} />
-            <input className="w-full px-5 py-3 text-sm  bg-cyan-600/5 mb-4 outline-none" type="password" placeholder='Password' value={password} onChange={(e)=>setPassword(e.target.value)}/>
-            {error && <p className='text-sm text-red-500 mb-4'>{error}</p>}
-            <button className='text-sm bg-cyan-700 w-full rounded-full px-5 py-3 text-white hover:bg-cyan-500 cursor-pointer' type='submit'>LOGIN</button>
-            <p className='text-sm text-slate-500  text-center my-4 hover:text-blue-400 cursor-pointer'>Don't have an account?</p>
-            <button onClick={()=>{navigate('/signup')}} className='text-sm bg-cyan-500 w-full rounded-full px-5 py-3 text-white hover:bg-cyan-700 cursor-pointer' type='submit' >CREATE ACCOUNT</button>
-          </form>
-        </div>    
+
+    
+        <div className="w-full md:w-1/2 bg-white rounded-lg md:rounded-l-none md:rounded-r-lg p-8 md:p-12 shadow-lg shadow-cyan-200/20">
+        <form onSubmit={handlelogin}>
+          <h4 className="text-2xl font-semibold mb-7 text-center md:text-left">
+              Login
+          </h4>
+
+          <input
+            className="w-full px-5 py-3 text-sm bg-cyan-600/5 mb-4 outline-none rounded"
+            type="text"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+
+          <input
+            className="w-full px-5 py-3 text-sm bg-cyan-600/5 mb-4 outline-none rounded"
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
+          {error && <p className="text-sm text-red-500 mb-4">{error}</p>}
+
+         <button
+            className="text-sm bg-cyan-700 w-full rounded-full px-5 py-3 text-white hover:bg-cyan-500 cursor-pointer"
+            type="submit"
+          >
+           LOGIN
+          </button>
+
+          <p className="text-sm text-slate-500 text-center my-4 hover:text-blue-400 cursor-pointer">
+            Don't have an account?
+          </p>
+
+          <button
+            onClick={() => navigate("/signup")}
+            className="text-sm bg-cyan-500 w-full rounded-full px-5 py-3 text-white hover:bg-cyan-700 cursor-pointer"
+            type="button"
+          >
+            CREATE ACCOUNT
+          </button>
+        </form>
       </div>
+
     </div>
+  </div>
   )
 }
 export default Login

@@ -59,7 +59,7 @@ const Home = () => {
     setOpenAddeditmodel({isShown:true,type:"edit",data:data});
   }
 
-  // called either from cards or calendar
+ 
   const handleViewstory=(data)=>{
     if (data && data.noStoryForDate) {
       setCalendarMessage(
@@ -67,12 +67,11 @@ const Home = () => {
       );
       return;
     }
-    // clear any previous calendar message
+   
     setCalendarMessage('');
     setOpenViewmodel({isShown:true,data});
   };
 
-  // toggles the favourite status for a story and refreshes list
   const updateIsfavourite = async (story) => {
     try {
       const response = await axiosInstance.put(
@@ -80,7 +79,7 @@ const Home = () => {
         { isFavourite: !story.isFavourite }
       );
       if (response.data && response.data.story) {
-        // update local state instead of refetching everything for snappy UI
+      
         setAllStories((prev) =>
           prev.map((s) =>
             s._id === story._id ? response.data.story : s
@@ -114,10 +113,10 @@ const Home = () => {
     getUserInfo();
   }, []);
 
-  // compute filtered list based on search term
+ 
   const filteredStories = allStories.filter((item) => {
     const t = searchTerm.toLowerCase();
-    // make sure each value is a string before calling toLowerCase
+    
     const title = item.title ? String(item.title).toLowerCase() : "";
     const storyText = item.story ? String(item.story).toLowerCase() : "";
     const location = item.visitedLocation ? String(item.visitedLocation).toLowerCase() : "";
@@ -134,7 +133,7 @@ const Home = () => {
       <div className='container mx-auto py-10'>
         <div className='flex gap-7'>
           <div className='flex-1'>
-            {/* show calendar message if user clicked a date without stories */}
+           
             {calendarMessage && (
               <div className='text-center text-sm text-red-500 mb-4'>
                 {calendarMessage}
@@ -147,7 +146,7 @@ const Home = () => {
                   return(
                     <Travelstorycard
                       key={item._id}
-                      // note: backend returns `imageUrl`, not `imgUrl`
+                      
                       imgUrl={item.imageUrl}
                       title={item.title}
                       story={item.story}
