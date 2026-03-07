@@ -131,118 +131,118 @@ const Home = () => {
     <>
       <Navbar userinfo={userinfo} searchTerm={searchTerm} onSearch={setSearchTerm} />
 
-<div className='container mx-auto px-4 py-8'>
-  <div className='flex flex-col lg:flex-row gap-7'>
+        <div className='container mx-auto px-4 py-8'>
+            <div className='flex flex-col lg:flex-row gap-7'>
 
-    {/* Stories Section */}
-    <div className='flex-1'>
+    
+              <div className='flex-1'>
 
-      {calendarMessage && (
-        <div className='text-center text-sm text-red-500 mb-4'>
-          {calendarMessage}
+                {calendarMessage && (
+                    <div className='text-center text-sm text-red-500 mb-4'>
+                      {calendarMessage}
+                    </div>
+                )}
+
+                {filteredStories.length > 0 ? (
+                  <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4'>
+                    {filteredStories.map((item) => {
+                      return (
+                      <Travelstorycard
+                        key={item._id}
+                        imgUrl={item.imageUrl}
+                        title={item.title}
+                        story={item.story}
+                        date={item.visitedDate}
+                        visitedLocation={item.visitedLocation}
+                        isFavourite={item.isFavourite}
+                        onClick={() => handleViewstory(item)}
+                        onFavouriteclick={() => updateIsfavourite(item)}
+                      />
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className='text-center text-gray-500 py-8'>
+                    {searchTerm
+                      ? 'No stories found matching your search'
+                      : 'No stories yet – add one using the + button'}
+                  </div>
+                )}
+              </div>
+
+              {/* Calendar Sidebar */}
+              <div className='w-full lg:w-[320px]'>
+                  <CalendarSide stories={allStories} onDateClick={handleViewstory} />
+              </div>
+
+            </div>
         </div>
-      )}
 
-      {filteredStories.length > 0 ? (
-        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4'>
-          {filteredStories.map((item) => {
-            return (
-              <Travelstorycard
-                key={item._id}
-                imgUrl={item.imageUrl}
-                title={item.title}
-                story={item.story}
-                date={item.visitedDate}
-                visitedLocation={item.visitedLocation}
-                isFavourite={item.isFavourite}
-                onClick={() => handleViewstory(item)}
-                onFavouriteclick={() => updateIsfavourite(item)}
-              />
-            );
-          })}
-        </div>
-      ) : (
-        <div className='text-center text-gray-500 py-8'>
-          {searchTerm
-            ? 'No stories found matching your search'
-            : 'No stories yet – add one using the + button'}
-        </div>
-      )}
-    </div>
+        <ToastContainer />
 
-    {/* Calendar Sidebar */}
-    <div className='w-full lg:w-[320px]'>
-      <CalendarSide stories={allStories} onDateClick={handleViewstory} />
-    </div>
+        {/* Add/Edit Modal */}
+        <Modal
+          isOpen={openAddeditmodel.isShown}
+          onRequestClose={() => {}}
+          style={{
+            overlay: {
+            backgroundColor: 'rgba(0,0,0,0.2)',
+            zIndex: 999,
+            },
+          }}
+          appElement={document.getElementById('root')}
+          className='w-[90vw] sm:w-[80vw] md:w-[60vw] lg:w-[40%] h-[85vh] bg-white rounded-lg mx-auto mt-10 p-5 overflow-y-scroll scrollbar z-50'
+        >
+          <Addedittravelstory
+            type={openAddeditmodel.type}
+            storyinfo={openAddeditmodel.data}
+            onClose={() => {
+              setOpenAddeditmodel({ isShown: false, type: "add", data: null });
+            }}
+            getAllstories={getAllstories}
+          />
+        </Modal>
 
-  </div>
-</div>
+        {/* View Story Modal */}
+        <Modal
+          isOpen={openViewmodel.isShown}
+           onRequestClose={() => {}}
+          style={{
+           overlay: {
+            backgroundColor: 'rgba(0,0,0,0.2)',
+          zIndex: 999,
+            },
+          }}
+          appElement={document.getElementById('root')}
+          className='w-[90vw] sm:w-[80vw] md:w-[60vw] lg:w-[40%] h-[85vh] bg-white rounded-lg mx-auto mt-10 p-5 overflow-y-scroll scrollbar z-50'
+        >
+        <ViewTravelstory
+          storyinfo={openViewmodel.data || null}
+          onClose={() => {
+          setOpenViewmodel((prevState) => ({ ...prevState, isShown: false }));
+          }}
+          onEditClick={() => {
+           setOpenViewmodel((prevState) => ({ ...prevState, isShown: false }));
+          handleEdit(openViewmodel.data || null);
+            }}
+          onDeleteClick={() => {
+          if (window.confirm("Are you sure you want to delete this story?")) {
+            handleDeleteStory(openViewmodel.data);
+          }
+        }}
+      />
+      </Modal>
 
-<ToastContainer />
-
-{/* Add/Edit Modal */}
-<Modal
-  isOpen={openAddeditmodel.isShown}
-  onRequestClose={() => {}}
-  style={{
-    overlay: {
-      backgroundColor: 'rgba(0,0,0,0.2)',
-      zIndex: 999,
-    },
-  }}
-  appElement={document.getElementById('root')}
-  className='w-[90vw] sm:w-[80vw] md:w-[60vw] lg:w-[40%] h-[85vh] bg-white rounded-lg mx-auto mt-10 p-5 overflow-y-scroll scrollbar z-50'
->
-  <Addedittravelstory
-    type={openAddeditmodel.type}
-    storyinfo={openAddeditmodel.data}
-    onClose={() => {
-      setOpenAddeditmodel({ isShown: false, type: "add", data: null });
-    }}
-    getAllstories={getAllstories}
-  />
-</Modal>
-
-{/* View Story Modal */}
-<Modal
-  isOpen={openViewmodel.isShown}
-  onRequestClose={() => {}}
-  style={{
-    overlay: {
-      backgroundColor: 'rgba(0,0,0,0.2)',
-      zIndex: 999,
-    },
-  }}
-  appElement={document.getElementById('root')}
-  className='w-[90vw] sm:w-[80vw] md:w-[60vw] lg:w-[40%] h-[85vh] bg-white rounded-lg mx-auto mt-10 p-5 overflow-y-scroll scrollbar z-50'
->
-  <ViewTravelstory
-    storyinfo={openViewmodel.data || null}
-    onClose={() => {
-      setOpenViewmodel((prevState) => ({ ...prevState, isShown: false }));
-    }}
-    onEditClick={() => {
-      setOpenViewmodel((prevState) => ({ ...prevState, isShown: false }));
-      handleEdit(openViewmodel.data || null);
-    }}
-    onDeleteClick={() => {
-      if (window.confirm("Are you sure you want to delete this story?")) {
-        handleDeleteStory(openViewmodel.data);
-      }
-    }}
-  />
-</Modal>
-
-{/* Floating Add Button */}
-<button
-  className='w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center rounded-full bg-cyan-400 fixed right-6 bottom-6 sm:right-10 sm:bottom-10 shadow-lg'
-  onClick={() => {
-    setOpenAddeditmodel({ isShown: true, type: "add", data: null });
-  }}
->
-  <MdAdd className='text-[28px] sm:text-[32px] text-white' />
-</button>
-    </>
+      {/* Floating Add Button */}
+      <button
+        className='w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center rounded-full bg-cyan-400 fixed right-6 bottom-6 sm:right-10 sm:bottom-10 shadow-lg'
+        onClick={() => {
+           setOpenAddeditmodel({ isShown: true, type: "add", data: null });
+        }}
+      >
+      <MdAdd className='text-[28px] sm:text-[32px] text-white' />
+    </button>
+  </>
   )
 }
 
