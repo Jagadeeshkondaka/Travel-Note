@@ -1,101 +1,123 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import loginimg from '../../assets/login2.png'
 import { validateEmail } from '../../utils/helper';
 import axiosInstance from '../../utils/axiosinstancs';
 
 const Login = () => {
   const navigate = useNavigate();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
   const handlelogin = async (e) => {
     e.preventDefault();
-    if(!validateEmail(email)){
+
+    if (!validateEmail(email)) {
       setError('Please enter a valid email address');
       return;
     }
-    if(!password){
+
+    if (!password) {
       setError('Please enter your password');
       return;
-    } 
+    }
+
     setError('');
+    setLoading(true);
+
     try {
-      const response = await axiosInstance.post('/login', { email:email,password:password });
-  
+      console.log("Sending login request...");
+
+      const response = await axiosInstance.post('/login', {
+        email,
+        password,
+      });
+
+      console.log("Login response:", response.data);
+
       const accessToken = response.data?.accessToken;
+
       if (accessToken) {
         localStorage.setItem('token', accessToken);
         navigate('/dashboard');
       } else {
-      
         setError('Login failed: Invalid response from server.');
       }
+
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed. Please try again.');
+      console.error("LOGIN ERROR:", err.response || err);
+
+      if (err.code === "ECONNABORTED") {
+        setError("Server is taking too long. Please try again.");
+      } else {
+        setError(
+          err.response?.data?.message ||
+          "Server not responding. Try again."
+        );
+      }
+    } finally {
+      setLoading(false);
     }
   };
+
   return (
-    <div className="min-h-screen bg-cyan-50 relative">
-      <div className="container mx-auto flex flex-col md:flex-row items-center justify-center px-4 md:px-10 lg:px-20 py-10">
+    <div className="min-h-screen bg-cyan-50 flex items-center justify-center px-4">
 
-   
-        <div className="w-full md:w-1/2 flex items-center justify-center mb-6 md:mb-0">
-          <img
-            src={loginimg}
-            alt="login"
-            className="w-full h-auto max-h-[80vh] object-contain rounded-lg md:rounded-l-lg md:rounded-r-none"
-          />
-        </div>
+      <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8">
 
-    
-        <div className="w-full md:w-1/2 bg-white rounded-lg md:rounded-l-none md:rounded-r-lg p-8 md:p-12 shadow-lg shadow-cyan-200/20">
         <form onSubmit={handlelogin}>
-          <h4 className="text-2xl font-semibold mb-7 text-center md:text-left">
-              Login
-          </h4>
+          <h2 className="text-2xl font-semibold text-center mb-6">
+            Welcome Back
+          </h2>
 
           <input
-            className="w-full px-5 py-3 text-sm bg-cyan-600/5 mb-4 outline-none rounded"
             type="text"
-            placeholder="Email"
+            placeholder="Email Address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className="w-full px-4 py-3 mb-4 border rounded-lg outline-none focus:border-cyan-400"
           />
 
           <input
-            className="w-full px-5 py-3 text-sm bg-cyan-600/5 mb-4 outline-none rounded"
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className="w-full px-4 py-3 mb-4 border rounded-lg outline-none focus:border-cyan-400"
           />
 
-          {error && <p className="text-sm text-red-500 mb-4">{error}</p>}
-
-         <button
-            className="text-sm bg-cyan-700 w-full rounded-full px-5 py-3 text-white hover:bg-cyan-500 cursor-pointer"
-            type="submit"
-          >
-           LOGIN
-          </button>
-
-          <p className="text-sm text-slate-500 text-center my-4 hover:text-blue-400 cursor-pointer">
-            Don't have an account?
-          </p>
+          {error && (
+            <p className="text-sm text-red-500 mb-4">{error}</p>
+          )}
 
           <button
-            onClick={() => navigate("/signup")}
-            className="text-sm bg-cyan-500 w-full rounded-full px-5 py-3 text-white hover:bg-cyan-700 cursor-pointer"
-            type="button"
+            type="submit"
+            disabled={loading}
+            className={`w-full py-3 rounded-lg text-white font-medium ${
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-cyan-600 hover:bg-cyan-500"
+            }`}
           >
-            CREATE ACCOUNT
+            {loading ? "Logging in..." : "Login"}
           </button>
-        </form>
-      </div>
 
+          <p className="text-sm text-center mt-6">
+            Don't have an account?{" "}
+            <span
+              onClick={() => navigate('/signup')}
+              className="text-cyan-600 cursor-pointer hover:underline"
+            >
+              Sign up
+            </span>
+          </p>
+        </form>
+
+      </div>
     </div>
-  </div>
-  )
-}
-export default Login
+  );
+};
+
+export default Login;

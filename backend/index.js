@@ -13,7 +13,10 @@ const path = require('path');
 const User = require('./models/user');
 const TravelStory = require('./models/travelstory.model');
 
-mongoose.connect(process.env.MONGODB_URI);
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log("MongoDB connected ✅"))
+    .catch((err) => console.error(err));
+
 
 const app = express();
 app.use(express.json());
